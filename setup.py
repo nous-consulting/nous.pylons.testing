@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='nous.pylons.testing',
-    version='0.4.2',
+    version='0.4.3',
     description='Nous testing utils.',
     author='Ignas Mikalajunas',
     author_email='ignas@nous.lt',
