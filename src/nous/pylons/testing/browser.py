@@ -33,6 +33,7 @@ class NousTestApp(TestApp):
             print >> sys.stderr, 'Stopped HTTP server.'
 
 
+
 def indent(elem, omit_attributes, omit_classes, include_classes, include_attributes, level=0):
     """Function that properly indents xml.
 
@@ -64,6 +65,8 @@ def indent(elem, omit_attributes, omit_classes, include_classes, include_attribu
         if not e.tail or not e.tail.strip():
             e.tail = i
     else:
+        if elem.text:
+            elem.text = elem.text.strip()
         if level and (not elem.tail or not elem.tail.strip()):
             elem.tail = i
 
