@@ -1,7 +1,11 @@
 import os
 
+import pylons
+
 from nous.pylons.testing.browser import NousTestApp, NousTestBrowser
 from nous.pylons.testing import LayerBase, GrokLayer, CompositeLayer, PylonsTestBrowserLayer
+
+from my.model import meta
 
 
 here_dir = os.path.dirname(os.path.abspath(__file__))
@@ -21,13 +25,13 @@ class YourBaseLayer(LayerBase):
 
 
 YourLayer = CompositeLayer(GrokLayer,
-                            PylonsTestBrowserLayer('test.ini', conf_dir),
+                            PylonsTestBrowserLayer('test.ini', conf_dir, meta),
                             YourBaseLayer(),
                             name='YourLayer')
 
 
 YourErrorsLayer = CompositeLayer(GrokLayer,
-                                  PylonsTestBrowserLayer('errors.ini', conf_dir),
+                                  PylonsTestBrowserLayer('errors.ini', conf_dir, meta),
                                   YourBaseLayer(),
                                   name='YourErrorsLayer')
 
@@ -35,7 +39,7 @@ YourErrorsLayer = CompositeLayer(GrokLayer,
 class YourTestBrowser(NousTestBrowser):
 
     @classmethod
-    def logIn(cls, email='admin@ututi.lt', password='asdasd'):
+    def logIn(cls, email='admin@example.com', password='asdasd'):
         browser = cls()
         form = browser.getForm('loginForm')
         form.getControl('Email').value = email

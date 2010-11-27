@@ -10,8 +10,6 @@ from wsgi_intercept.urllib2_intercept import install_opener
 from paste.deploy import loadapp
 from paste.script.appinstall import SetupCommand
 
-from ututi.model import meta
-
 environ = {}
 
 
@@ -50,9 +48,10 @@ class WsgiInterceptLayer(object):
 
 class PylonsBaseLayer(object):
 
-    def __init__(self, config_file, conf_dir):
+    def __init__(self, config_file, conf_dir, meta):
         self.config = config_file
         self.conf_dir = conf_dir
+        self.meta = meta
         self.__name__ = '%s(%s)' % (self.__class__.__name__, self.config)
         self.__bases__ = []
 
@@ -63,7 +62,7 @@ class PylonsBaseLayer(object):
 
     def tearDown(self):
         from sqlalchemy.schema import MetaData
-        meta.metadata = MetaData()
+        self.meta.metadata = MetaData()
         from sqlalchemy.orm import clear_mappers
         clear_mappers()
         pylons.test.pylonsapp = None
