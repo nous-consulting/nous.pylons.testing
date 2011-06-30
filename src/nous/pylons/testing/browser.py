@@ -2,6 +2,7 @@ import re
 import sys
 import webbrowser
 
+from xml.etree.ElementTree import _escape_cdata
 from lxml.html import fromstring
 from lxml import etree
 
@@ -73,7 +74,7 @@ def indent(elem, omit_attributes, omit_classes, include_classes, include_attribu
 
 def to_string(node, omit_attributes, omit_classes, include_classes, include_attributes):
     if isinstance(node, basestring):
-        return node
+        return _escape_cdata(node, 'ascii').rstrip()
     else:
         indent(node, omit_attributes, omit_classes, include_classes, include_attributes)
         return etree.tostring(node, pretty_print=True).rstrip()
