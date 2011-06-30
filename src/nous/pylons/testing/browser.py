@@ -9,7 +9,6 @@ from lxml import etree
 from webtest import TestApp
 from wsgi_intercept.zope_testbrowser.wsgi_testbrowser import WSGI_Browser
 from wsgiref.simple_server import make_server
-from zope.testing.server import addPortToURL
 
 import pylons.test
 
@@ -80,6 +79,25 @@ def to_string(node, omit_attributes, omit_classes, include_classes, include_attr
         return etree.tostring(node, pretty_print=True).rstrip()
 
 
+def addPortToURL(url, port):
+    """Add a port number to the url.
+
+        >>> addPortToURL('http://localhost/foo/bar/baz.html', 3000)
+        'http://localhost:3000/foo/bar/baz.html'
+        >>> addPortToURL('http://foo.bar.com/index.html?param=some-value', 555)
+        'http://foo.bar.com:555/index.html?param=some-value'
+
+        >>> addPortToURL('http://localhost:666/index.html', 555)
+        'http://localhost:555/index.html'
+
+    """
+    (scheme, netloc, url, query, fragment) = urllib2.urlparse.urlsplit(url)
+    netloc = netloc.split(':')[0]
+    netloc = "%s:%s" % (netloc, port)
+    url = urllib2.urlparse.urlunsplit((scheme, netloc, url, query, fragment))
+    return url
+
+
 class NousTestBrowser(WSGI_Browser):
 
     def __init__(self, url='http://localhost/'):
@@ -127,3 +145,4 @@ class NousTestBrowser(WSGI_Browser):
         # class, href, title, alt, id, src
         for item in self.queryHTML(query, selector, omit_attributes, omit_classes, include_classes, include_attributes):
             print item
+
